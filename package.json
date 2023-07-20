@@ -1,23 +1,25 @@
 {
-  "name": "docs",
+  "name": "vuepress-my-doc",
   "version": "1.0.0",
-  "description": "",
+  "description": "vuepress搭建自己的前端组件文档库",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "vuepress dev docs",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
+    "dev": "vuepress dev docs",
     "build": "vuepress build docs"
   },
-  "keywords": [],
+  "keywords": [
+    "vuepress",
+    "前端组件文档",
+    "element",
+    "doc"
+  ],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@vuepress/client": "2.0.0-beta.62",
-    "@vuepress/plugin-docsearch": "2.0.0-beta.62",
-    "@vuepress/plugin-search": "2.0.0-beta.62",
-    "vue": "^3.3.2",
-    "vuepress": "2.0.0-beta.62"
+  "dependencies": {
+    "element-ui": "^2.15.13",
+    "vuepress": "^1.8.2",
+    "vuepress-plugin-demo-container": "^0.2.0",
+    "node-sass": "^6.0.1",
+    "sass-loader": "^10.2.0"
   }
 }

@@ -4,10 +4,9 @@ heroImage: /images/logo.svg
 heroAlt: 编程秘籍
 heroText: 编程秘籍
 tagline: 小书生的组件文档
-actions:
-  - text: 开始阅读
-    link: /目录/
-    type: primary
+actionText: 开始阅读
+actionLink: /comps/
+actionType: primary
   # - text: 作者简介
   #   link: /guide/
   #   type: secondary
