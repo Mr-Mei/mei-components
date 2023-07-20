@@ -29,7 +29,7 @@ jobs:
           npm run build
 
       - name: Deploy # 将打包内容发布到 github page
-        uses: JamesIves/github-pages-deploy-action@v4.3.3 # 使用别人写好的 actions
+        uses: JamesIves/github-pages-deploy-action@v4 # 使用别人写好的 actions
         with:  # 自定义环境变量
           BRANCH: gh-pages # github page指定分支
           FOLDER: docs/.vuepress/dist # build后生成的目录
