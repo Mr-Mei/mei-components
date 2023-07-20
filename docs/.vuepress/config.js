@@ -5,7 +5,7 @@ module.exports = {
   //   ['link', { rel: 'icon', href: '/images/logo.svg' }]
   // ],
   description: '自定义组件',
-  base:'/',
+  base:'./',
   port: '8088',
   themeConfig: {
     nav: [
