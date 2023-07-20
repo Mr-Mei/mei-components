@@ -12,18 +12,18 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install pnpm # 安装pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 6.0.2
+      # - name: Install pnpm # 安装pnpm
+      #   uses: pnpm/action-setup@v2
+      #   with:
+      #     version: 6.0.2
 
       - name: Install and Build # 下载依赖 打包项目
         run: |
-          pnpm install
-          pnpm run build
+          npm install
+          npm run build
 
       - name: Deploy # 将打包内容发布到 github page
-        uses: JamesIves/github-pages-deploy-action@v4 # 使用别人写好的 actions
+        uses: JamesIves/github-pages-deploy-action@v4.3.3 # 使用别人写好的 actions
         with:  # 自定义环境变量
           BRANCH: gh-pages # github page指定分支
           FOLDER: docs/.vuepress/dist # build后生成的目录
