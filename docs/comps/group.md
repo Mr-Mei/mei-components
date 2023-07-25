@@ -2,8 +2,36 @@
 
 页面分组
 
-## 组件封装
+## 基本用法
+
+适用于表单或视图的分隔
+
 ::: demo
+```vue
+<template>
+  <CstGroup :name="name" :tips="'用于区分上下文模块'"></CstGroup>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        name: '页面分组',
+      }
+    },
+  }
+</script>
+```
+:::
+
+## Attributes 属性
+
+| 参数 | 说明               | 类型   | 可选项 | 默认值 |
+| ---- | ------------------ | ------ | ------ | ------ |
+| name | 分组名称           | String |        |  页面分组 |
+| tips | 补充说明，默认值空 | String |        |        |
+
+## 组件封装
 ```vue
   <template>
     <p class="cst-group" :name="name">
@@ -51,32 +79,3 @@
   }
   </style>
 ```
-:::
-## 基本用法
-
-适用于表单或视图的分隔
-
-::: demo
-```vue
-<template>
-  <CstGroup :name="name" :tips="'用于区分上下文模块'"></CstGroup>
-</template>
-
-<script>
-  export default {
-    data() {
-      return {
-        name: '页面分组',
-      }
-    },
-  }
-</script>
-```
-:::
-
-## Attributes 属性
-
-| 参数 | 说明               | 类型   | 可选项 | 默认值 |
-| ---- | ------------------ | ------ | ------ | ------ |
-| name | 分组名称           | String |        |  页面分组 |
-| tips | 补充说明，默认值空 | String |        |        |

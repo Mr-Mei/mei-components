@@ -5,7 +5,7 @@ heroAlt: 编程秘籍
 heroText: 编程秘籍
 tagline: 小书生的组件文档
 actionText: 开始阅读
-actionLink: /comps/
+actionLink: /comps/start
 actionType: primary
   # - text: 作者简介
   #   link: /guide/

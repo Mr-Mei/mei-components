@@ -1,6 +1,7 @@
 import group from './group'
+import form from './form'
 
-const components = [group]
+const components = [group, form]
 
 const install = Vue => {
   // 判断组件是否安装，如果已经安装了就不在安装。

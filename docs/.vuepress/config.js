@@ -5,7 +5,7 @@ module.exports = {
   //   ['link', { rel: 'icon', href: '/images/logo.svg' }]
   // ],
   description: '自定义组件',
-  base:'/mei-components/',
+  base: '/mei-components/',
   port: '8088',
   themeConfig: {
     nav: [
@@ -15,11 +15,16 @@ module.exports = {
       },
       {
         text: '组件',
-        link: '/comps/',
+        link: '/comps/start',
       },
     ],
     sidebar: {
-      '/comps/': ['/comps/', '/comps/start', '/comps/group'],
+      '/comps/': [
+        // '/comps/',
+        '/comps/start',
+        '/comps/group',
+        '/comps/form'
+      ],
     },
   },
   plugins: ['demo-container'],
