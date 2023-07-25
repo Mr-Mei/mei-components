@@ -98,6 +98,9 @@ export default {
           prop: "keyDateTime",
           label: "日期",
           placeholder: "请选择日期时间",
+          rules: [
+            { required: true, message: '请选择日期时间'},
+          ]
         },
         {
           type: "DateRange",
@@ -105,6 +108,9 @@ export default {
           prop: "keyDateRange",
           label: "日期范围",
           placeholder: "请选择日期范围",
+          rules: [
+            { required: true, message: '请选择日期范围'},
+          ]
         },
         {
           type: "DateTimeRange",
@@ -119,6 +125,7 @@ export default {
           prop: "keyRadio",
           border: false,
           size: 'mini' ,
+          label: "性别",
           options:{
             data:[
               {
@@ -134,7 +141,10 @@ export default {
                 value: '不确定',
               }
             ],
-          }
+          },
+          rules: [
+            { required: true, message: '请选择性别'},
+          ]
         },
         {
           type: "RadioButtom",
@@ -479,5 +489,4 @@ export default {
   },
 };
 </script>
- 
 ```
