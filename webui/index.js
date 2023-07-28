@@ -1,7 +1,8 @@
-import group from './group'
-import form from './form'
+import CstGroup from './CstGroup'
+import CstForm from './CstForm'
+import CstInput from './CstInput'
 
-const components = [group, form]
+const components = [CstGroup, CstForm, CstInput]
 
 const install = Vue => {
   // 判断组件是否安装，如果已经安装了就不在安装。
@@ -11,7 +12,7 @@ const install = Vue => {
   components.map(component => Vue.use(component))
 }
 
-// 检查vue是否安装，满足才执行
+// 检查vue是否安装，满足才执行 (支持使用标签的方式引入) 
 if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 }

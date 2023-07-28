@@ -75,7 +75,7 @@ export default {
             ]
           },
           rules: [
-            { required: true, message: '请选择角色'},
+            { required: true, message: '请选择角色',trigger: 'change'},
           ]
         },
         {
@@ -99,7 +99,7 @@ export default {
           label: "日期",
           placeholder: "请选择日期时间",
           rules: [
-            { required: true, message: '请选择日期时间'},
+            { required: true, message: '请选择日期时间',trigger: 'change'},
           ]
         },
         {
@@ -109,7 +109,7 @@ export default {
           label: "日期范围",
           placeholder: "请选择日期范围",
           rules: [
-            { required: true, message: '请选择日期范围'},
+            { required: true, message: '请选择日期范围',trigger: 'change'},
           ]
         },
         {
@@ -143,7 +143,7 @@ export default {
             ],
           },
           rules: [
-            { required: true, message: '请选择性别'},
+            { required: true, message: '请选择性别',trigger: 'change' },
           ]
         },
         {
@@ -179,7 +179,7 @@ export default {
         },
       ];
     },
-    handleSearch() {},
+    handleSearch() {}
   },
 };
 </script>
@@ -198,9 +198,16 @@ export default {
 | btnLoading | 查询按钮的加载效果，默认为false | Boolean |    | false |
 | loading | 表单的加载效果，默认为false | Boolean |    | false |
 | formWidth | 表单宽度，默认为200px | String |    | 200px |
-| labelWidth | lable宽度，默认为120px | String |    | 120px |
+| labelWidth | lable标签文本宽度，默认为120px | String |    | 120px |
 | size | 控制该表单内组件的尺寸，默认为medium | String | medium / small / mini   | medium |
 
+## Methods 方法
+
+| 参数 | 说明               | 参数   | 
+| ---- | ------------------ | ------ |
+| handleSearch |整个表单的查询搜索方法| --- |
+| resetFields |对整个表单进行重置，将所有字段值重置为初始值并移除校验结果| --- |
+| remoteMethod |下拉框远程搜索方法，属性filterable和remote均为true生效，参数为输入值value和对应绑定字段prop| Function(value, prop) |
 ## 组件封装
 ```js
 // utils.js 中的 deepClone 方法
@@ -231,160 +238,81 @@ export const deepClone = (target, map = new WeakMap())=> {
 ```vue
 <template>
   <div :class="inline == true ? 'cst-form' : ''">
-    <el-form
-      :model="tempFormData"
-      :label-width="labelWidth"
-      :width="formWidth"
-      :inline="inline"
-      :loading="loading"
-      ref="form"
-      :size="size"
-    >
-      <el-form-item
-        v-for="item in tempFormItems"
-        :label="item.label ? item.label + '：' : ''"
-        :key="item.prop"
-        :prop="item.prop"
-        :rules="item.rules"
-      >
+    <el-form :model="tempFormData" :label-width="labelWidth" :width="formWidth" :inline="inline" :loading="loading"
+      ref="form" :size="size">
+      <el-form-item v-for="item in tempFormItems" :label="item.label ? item.label + '：' : ''" :key="item.prop"
+        :prop="item.prop" :rules="item.rules">
         <!-- 输入框 -->
-        <el-input
-          v-if="item.type === 'Input'"
-          v-model="tempFormData[item.prop]"
-          :style="{ width: item.width }"
-          :disabled="item.disable"
-          :placeholder="item.placeholder ? item.placeholder : '请输入' + item.label"
-        >
+        <el-input v-if="item.type === 'Input'" v-model="tempFormData[item.prop]" :style="{ width: item.width }"
+        :disabled="item.disable" :placeholder="item.placeholder ? item.placeholder : '请输入' + item.label">
         </el-input>
         <!-- 数字输入框 -->
-        <el-input
-          type="number"
-          :min="1"
-          v-if="item.type === 'InputNumber'"
-          v-model.number="tempFormData[item.prop]"
-          :style="{ width: item.width }"
-          :disabled="item.disable"
-          :placeholder="item.placeholder ? item.placeholder : '请输入' + item.label"
-        >
+        <el-input type="number" :min="1" v-if="item.type === 'InputNumber'" v-model.number="tempFormData[item.prop]"
+          :style="{ width: item.width }" :disabled="item.disable"
+          :placeholder="item.placeholder ? item.placeholder : '请输入' + item.label">
         </el-input>
         <!-- 下拉框 filterable 是否可搜索 默认是false  multiple 是否多选 默认false-->
-        <el-select
-          v-if="item.type === 'Select'"
-          :multiple="item.multiple"
-          :filterable="item.filterable"
-          v-model="tempFormData[item.prop]"
-          :style="{ width: item.width }"
-          :disabled="item.disable"
-          :placeholder="item.placeholder ? item.placeholder : '请选择' + item.label"
-          :remote="item.remote"
-          :remote-method="
-            (query) => {
+        <el-select v-if="item.type === 'Select'" :multiple="item.multiple" :filterable="item.filterable"
+          v-model="tempFormData[item.prop]" :style="{ width: item.width }" :disabled="item.disable"
+          :placeholder="item.placeholder ? item.placeholder : '请选择' + item.label" :remote="item.remote" :remote-method="(query) => {
               remoteMethod(query, item.prop);
             }
-          "
-          clearable
-        >
-          <el-option
-            v-for="op in item.options.data"
-            :label="op[item.options.value] || op.value"
-            :value="op[item.options.key] || op.key"
-            :key="op[item.options.key] || op.key"
-          >
+            " clearable>
+          <el-option v-for="op in item.options.data" :label="op[item.options.value] || op.value"
+            :value="op[item.options.key] || op.key" :key="op[item.options.key] || op.key">
           </el-option>
         </el-select>
- 
+
         <!-- 日期 -->
-        <el-date-picker
-          v-if="item.type === 'Date'"
-          v-model="tempFormData[item.prop]"
-          :disabled="item.disable"
-          :placeholder="item.placeholder ? item.placeholder : '请选择日期'"
-          clearable
-        >
+        <el-date-picker v-if="item.type === 'Date'" v-model="tempFormData[item.prop]" :disabled="item.disable"
+          :placeholder="item.placeholder ? item.placeholder : '请选择日期'" clearable>
         </el-date-picker>
- 
+
         <!-- 时间 -->
-        <el-time-select
-          v-if="item.type === 'Time'"
-          v-model="tempFormData[item.prop]"
-          :disabled="item.disable"
-          :placeholder="item.placeholder ? item.placeholder : '请选择时间'"
-          clearable
-        >
+        <el-time-select v-if="item.type === 'Time'" v-model="tempFormData[item.prop]" :disabled="item.disable"
+          :placeholder="item.placeholder ? item.placeholder : '请选择时间'" clearable>
         </el-time-select>
- 
+
         <!-- 日期时间 -->
-        <el-date-picker
-          v-if="item.type === 'DateTime'"
-          type="datetime"
-          v-model="tempFormData[item.prop]"
-          :disabled="item.disable"
-          :placeholder="item.placeholder ? item.placeholder : '请选择日期'"
-          clearable
-        >
+        <el-date-picker v-if="item.type === 'DateTime'" type="datetime" v-model="tempFormData[item.prop]"
+          :disabled="item.disable" :placeholder="item.placeholder ? item.placeholder : '请选择日期'" clearable>
         </el-date-picker>
- 
+
         <!-- 日期范围 -->
-        <el-date-picker
-          v-if="item.type === 'DateTimeRange'||item.type === 'DateRange'"
-          :type="item.type === 'DateTimeRange'?'datetimerange':'daterange'"
-          v-model="tempFormData[item.prop]"
-          :disabled="item.disable"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          clearable
-        >
+        <el-date-picker v-if="item.type === 'DateTimeRange' || item.type === 'DateRange'"
+          :type="item.type === 'DateTimeRange' ? 'datetimerange' : 'daterange'" v-model="tempFormData[item.prop]"
+          :disabled="item.disable" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" clearable>
         </el-date-picker>
- 
+
         <!-- 单选框 普通的样式 Radio 的尺寸，仅在 border 为真时有效-->
         <!-- :border="tempFormData[item.border]" -->
         <template v-if="item.type === 'Radio'">
-          <el-radio
-            v-model="tempFormData[item.prop]"
-            v-for="op in item.options.data"
-            :disabled="item.disable"
-            :border="item.border"
-            :size="item.size"
-            :label="op[item.options.value] || op.value"
-            :value="op[item.options.key] || op.key"
-            :key="op[item.options.key] || op.key"
-          ></el-radio>
+          <el-radio v-model="tempFormData[item.prop]" v-for="op in item.options.data" :disabled="item.disable"
+            :border="item.border" :size="item.size" :label="op[item.options.value] || op.value"
+            :value="op[item.options.key] || op.key" :key="op[item.options.key] || op.key"></el-radio>
         </template>
- 
+
         <!-- 单选框 按钮样式 -->
-        <el-radio-group
-          v-if="item.type === 'RadioButtom'"
-          v-model="tempFormData[item.prop]"
-          :size="item.size"
-          :disabled="item.disable"
-        >
-          <el-radio-button
-            v-for="op in item.options.data"
-            :label="op[item.options.value] || op.value"
-            :value="op[item.options.key] || op.key"
-            :key="op[item.options.key] || op.key"
-          ></el-radio-button>
+        <el-radio-group v-if="item.type === 'RadioButtom'" v-model="tempFormData[item.prop]" :size="item.size"
+          :disabled="item.disable">
+          <el-radio-button v-for="op in item.options.data" :label="op[item.options.value] || op.value"
+            :value="op[item.options.key] || op.key" :key="op[item.options.key] || op.key"></el-radio-button>
         </el-radio-group>
- 
+
         <!-- 文本框 -->
-        <el-input
-          v-if="item.type === 'Textarea'"
-          v-model="tempFormData[item.prop]"
-          type="textarea"
-          :style="{ width: item.width }"
-          :disabled="item.disable"
-          :rows="item.row"
-          :autosize="item.autosize"
-          :placeholder="item.placeholder ? item.placeholder : '请输入' + item.label"
-        >
+        <el-input v-if="item.type === 'Textarea'" v-model="tempFormData[item.prop]" type="textarea"
+          :style="{ width: item.width }" :disabled="item.disable" :rows="item.row" :autosize="item.autosize"
+          :placeholder="item.placeholder ? item.placeholder : '请输入' + item.label">
         </el-input>
       </el-form-item>
-      <!-- 查询按钮 de-->
+      <!-- 查询按钮 -->
       <span>
-        <el-form-item v-show="isShowBtn">
+        <el-form-item v-show="isSearchBtn">
           <el-button type="primary" @click="handleSearch" :btnLoading="btnLoading">
             {{ formBtn }}
+          </el-button>
+          <el-button v-show="isResetBtn" type="info" @click="resetFields">
+            重置
           </el-button>
         </el-form-item>
       </span>
@@ -407,7 +335,7 @@ export default {
       type: Array,
       default: [],
     },
-    isShowBtn: {
+    isSearchBtn: {
       // 是否展示查询按钮
       type: Boolean,
       default: true,
@@ -416,6 +344,11 @@ export default {
       // 查询按钮的自定义文字
       type: String,
       default: "查询",
+    },
+    isResetBtn: {
+      // 是否展示重置按钮
+      type: Boolean,
+      default: true,
     },
     btnLoading: {
       // 查询按钮的loading效果
@@ -475,12 +408,18 @@ export default {
   },
   methods: {
     // 远程搜索
-    remoteMethod(value, type) {
-      this.$emit("remoteMethod", value, type);
+    remoteMethod(value, prop) {
+      this.$emit("remoteMethod", value, prop);
     },
     // 行内表单搜索事件
     handleSearch() {
-      this.$emit("handleSearch");
+      this.$refs['form'].validate((valid) => {
+        if (valid) { // 通过校验
+          this.$emit("handleSearch");
+        } else {
+          return false;
+        }
+      });
     },
     // 清空form表单事件
     resetFields() {

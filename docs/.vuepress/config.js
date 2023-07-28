@@ -23,7 +23,8 @@ module.exports = {
         // '/comps/',
         '/comps/start',
         '/comps/group',
-        '/comps/form'
+        '/comps/form',
+        '/comps/input',
       ],
     },
   },

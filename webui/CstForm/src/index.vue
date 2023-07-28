@@ -1,7 +1,7 @@
 <template>
   <div :class="inline == true ? 'cst-form' : ''">
     <el-form :model="tempFormData" :label-width="labelWidth" :width="formWidth" :inline="inline" :loading="loading"
-      ref="form" :size="size">
+      ref="form" :size="size" v-bind="$attrs">
       <el-form-item v-for="item in tempFormItems" :label="item.label ? item.label + '：' : ''" :key="item.prop"
         :prop="item.prop" :rules="item.rules">
         <!-- 输入框 -->
@@ -17,8 +17,8 @@
         <el-select v-if="item.type === 'Select'" :multiple="item.multiple" :filterable="item.filterable"
           v-model="tempFormData[item.prop]" :style="{ width: item.width }" :disabled="item.disable"
           :placeholder="item.placeholder ? item.placeholder : '请选择' + item.label" :remote="item.remote" :remote-method="(query) => {
-              remoteMethod(query, item.prop);
-            }
+            remoteMethod(query, item.prop);
+          }
             " clearable>
           <el-option v-for="op in item.options.data" :label="op[item.options.value] || op.value"
             :value="op[item.options.key] || op.key" :key="op[item.options.key] || op.key">
@@ -49,9 +49,11 @@
         <!-- 单选框 普通的样式 Radio 的尺寸，仅在 border 为真时有效-->
         <!-- :border="tempFormData[item.border]" -->
         <template v-if="item.type === 'Radio'">
-          <el-radio v-model="tempFormData[item.prop]" v-for="op in item.options.data" :disabled="item.disable"
-            :border="item.border" :size="item.size" :label="op[item.options.value] || op.value"
-            :value="op[item.options.key] || op.key" :key="op[item.options.key] || op.key"></el-radio>
+          <el-radio-group v-model="tempFormData[item.prop]">
+            <el-radio v-for="op in item.options.data" :disabled="item.disable" :border="item.border" :size="item.size"
+              :label="op[item.options.value] || op.value" :value="op[item.options.key] || op.key"
+              :key="op[item.options.key] || op.key"></el-radio>
+          </el-radio-group>
         </template>
 
         <!-- 单选框 按钮样式 -->
@@ -67,11 +69,14 @@
           :placeholder="item.placeholder ? item.placeholder : '请输入' + item.label">
         </el-input>
       </el-form-item>
-      <!-- 查询按钮 de-->
+      <!-- 查询按钮 -->
       <span>
-        <el-form-item v-show="isShowBtn">
+        <el-form-item v-show="isSearchBtn">
           <el-button type="primary" @click="handleSearch" :btnLoading="btnLoading">
             {{ formBtn }}
+          </el-button>
+          <el-button v-show="isResetBtn" type="info" @click="resetFields">
+            重置
           </el-button>
         </el-form-item>
       </span>
@@ -94,7 +99,7 @@ export default {
       type: Array,
       default: [],
     },
-    isShowBtn: {
+    isSearchBtn: {
       // 是否展示查询按钮
       type: Boolean,
       default: true,
@@ -103,6 +108,11 @@ export default {
       // 查询按钮的自定义文字
       type: String,
       default: "查询",
+    },
+    isResetBtn: {
+      // 是否展示重置按钮
+      type: Boolean,
+      default: true,
     },
     btnLoading: {
       // 查询按钮的loading效果
@@ -162,8 +172,8 @@ export default {
   },
   methods: {
     // 远程搜索
-    remoteMethod(value, type) {
-      this.$emit("remoteMethod", value, type);
+    remoteMethod(value, prop) {
+      this.$emit("remoteMethod", value, prop);
     },
     // 行内表单搜索事件
     handleSearch() {
